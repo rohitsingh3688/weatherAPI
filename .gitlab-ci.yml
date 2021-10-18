@@ -9,7 +9,7 @@ postman_tests:
     script:
         - newman --version
         - npm install -g newman-reporter-htmlextra
-        - newman run collections/Weather.postman_collection.json -d dataset/weatherDataSet.json --suppress-exit-code 1 -r --reporter-htmlextra-export catAPI.html htmlextra --reporter-htmlextra-browserTitle "CAT API Report" --reporter-htmlextra-title "CAT API Report Dashboard" --reporter-htmlextra-titleSize 5
+        - newman run collections/Weather.postman_collection.json -d dataset/weatherDataSet.json --suppress-exit-code 1 -r --reporter-htmlextra-export       weatherAPI.html htmlextra --reporter-htmlextra-browserTitle "WEATHER API Report" --reporter-htmlextra-title "WEATHER API Report Dashboard" --reporter-htmlextra-titleSize 5
     artifacts:
         when: always
         paths:

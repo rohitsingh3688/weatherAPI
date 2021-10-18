@@ -1,0 +1,8 @@
+[
+{"Iteration1":"Valid timezone with json format", "timezoneName": "timezone", "weatherTime": "current", "format":"json", "location": "Paris", "status": 200},
+{"Iteration1":"Valid timezone with json format", "timezoneName": "timezone", "weatherTime": "current", "format":"json", "location": "UK", "status": 200},
+{"Iteration1":"InValid timezone with json format", "timezoneName": "timezone", "weatherTime": "current", "format":"json", "location": "abcd", "status": 400},
+{"Iteration1":"empty timezone with json format", "timezoneName": "timezone", "weatherTime": "current", "format":"json", "location": "", "status": 400},
+{"Iteration2":"Valid timezone with xml format", "timezoneName": "timezone", "weatherTime": "current", "format":"xml", "location": "Paris", "status": 200},
+{"Iteration2":"InValid timezone with xml format", "timezoneName": "timezone", "weatherTime": "current", "format":"xml", "location": "xyz", "status": 400}
+]

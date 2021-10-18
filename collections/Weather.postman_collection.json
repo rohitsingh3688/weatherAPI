@@ -1,0 +1,511 @@
+{
+	"info": {
+		"_postman_id": "d63aec25-3afd-4f57-bcb0-c1b2f2d5d758",
+		"name": "Weather",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Timezone",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Define expected response schema\r",
+							"const schema = {\r",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"required\": [\r",
+							"        \"location\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"location\": {\r",
+							"            \"$id\": \"#/properties/location\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"required\": [\r",
+							"                \"name\",\r",
+							"                \"region\",\r",
+							"                \"country\",\r",
+							"                \"lat\",\r",
+							"                \"lon\",\r",
+							"                \"tz_id\",\r",
+							"                \"localtime_epoch\",\r",
+							"                \"localtime\"\r",
+							"            ],\r",
+							"            \"properties\": {\r",
+							"                \"name\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/name\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"region\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/region\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"country\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/country\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"lat\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/lat\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"lon\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/lon\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"tz_id\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/tz_id\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"localtime_epoch\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/localtime_epoch\",\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"localtime\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/localtime\",\r",
+							"                    \"type\": \"string\"\r",
+							"                }\r",
+							"            },\r",
+							"            \"additionalProperties\": true\r",
+							"        }\r",
+							"    },\r",
+							"    \"additionalProperties\": true\r",
+							"}\r",
+							"\r",
+							"// set default expected values in case not present in test data set\r",
+							"const timezoneName = pm.iterationData.get(\"timezoneName\")\r",
+							"const format = pm.iterationData.get(\"format\")\r",
+							"const location = pm.iterationData.get(\"location\")\r",
+							"const code = pm.iterationData.get(\"status\") || 200;\r",
+							"\r",
+							"// Test case to validate API response code with expected code from test data set \r",
+							"pm.test(\"Validating Status Code\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(code);\r",
+							"});\r",
+							"\r",
+							"// Test case to validate API returns atleast some error body in case of bad request or error response\r",
+							"if (pm.response.code >= 400) {\r",
+							"    pm.test(\"Validating Error Object is returned\", () => {\r",
+							"        pm.expect(pm.response.text()).to.include(\"error\")\r",
+							"    });\r",
+							"}\r",
+							"else if (code == 200) {\r",
+							"    if (format == \"json\") {\r",
+							"        pm.test('Validating Schema is valid', () => { // validate response schema when limit is passed\r",
+							"            pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;\r",
+							"        })\r",
+							"        pm.test(\"Validating Content-Type for json\", function () {// validate response Content-Type for json\r",
+							"            pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\")\r",
+							"        });\r",
+							"\r",
+							"    } else {\r",
+							"        pm.test(\"Validating Content-Type for xml\", function () {// validate response Content-Type for xml\r",
+							"            pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"text/xml\")\r",
+							"        });\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.weatherapi.com/v1/{{timezoneName}}.{{format}}?q={{location}}",
+					"protocol": "http",
+					"host": [
+						"api",
+						"weatherapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"{{timezoneName}}.{{format}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "08d06f5329714e15a1b235947211610",
+							"disabled": true
+						},
+						{
+							"key": "q",
+							"value": "{{location}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Current Weather",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Define expected response schema\r",
+							"const schema = {\r",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"required\": [\r",
+							"        \"location\",\r",
+							"        \"current\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"location\": {\r",
+							"            \"$id\": \"#/properties/location\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"required\": [\r",
+							"                \"name\",\r",
+							"                \"region\",\r",
+							"                \"country\",\r",
+							"                \"lat\",\r",
+							"                \"lon\",\r",
+							"                \"tz_id\",\r",
+							"                \"localtime_epoch\",\r",
+							"                \"localtime\"\r",
+							"            ],\r",
+							"            \"properties\": {\r",
+							"                \"name\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/name\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"region\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/region\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"country\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/country\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"lat\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/lat\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"lon\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/lon\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"tz_id\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/tz_id\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"localtime_epoch\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/localtime_epoch\",\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"localtime\": {\r",
+							"                    \"$id\": \"#/properties/location/properties/localtime\",\r",
+							"                    \"type\": \"string\"\r",
+							"                }\r",
+							"            },\r",
+							"            \"additionalProperties\": true\r",
+							"        },\r",
+							"        \"current\": {\r",
+							"            \"$id\": \"#/properties/current\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"required\": [\r",
+							"                \"last_updated_epoch\",\r",
+							"                \"last_updated\",\r",
+							"                \"temp_c\",\r",
+							"                \"temp_f\",\r",
+							"                \"is_day\",\r",
+							"                \"condition\",\r",
+							"                \"wind_mph\",\r",
+							"                \"wind_kph\",\r",
+							"                \"wind_degree\",\r",
+							"                \"wind_dir\",\r",
+							"                \"pressure_mb\",\r",
+							"                \"pressure_in\",\r",
+							"                \"precip_mm\",\r",
+							"                \"precip_in\",\r",
+							"                \"humidity\",\r",
+							"                \"cloud\",\r",
+							"                \"feelslike_c\",\r",
+							"                \"feelslike_f\",\r",
+							"                \"vis_km\",\r",
+							"                \"vis_miles\",\r",
+							"                \"uv\",\r",
+							"                \"gust_mph\",\r",
+							"                \"gust_kph\"\r",
+							"            ],\r",
+							"            \"properties\": {\r",
+							"                \"last_updated_epoch\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/last_updated_epoch\",\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"last_updated\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/last_updated\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"temp_c\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/temp_c\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"temp_f\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/temp_f\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"is_day\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/is_day\",\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"condition\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/condition\",\r",
+							"                    \"type\": \"object\",\r",
+							"                    \"required\": [\r",
+							"                        \"text\",\r",
+							"                        \"icon\",\r",
+							"                        \"code\"\r",
+							"                    ],\r",
+							"                    \"properties\": {\r",
+							"                        \"text\": {\r",
+							"                            \"$id\": \"#/properties/current/properties/condition/properties/text\",\r",
+							"                            \"type\": \"string\"\r",
+							"                        },\r",
+							"                        \"icon\": {\r",
+							"                            \"$id\": \"#/properties/current/properties/condition/properties/icon\",\r",
+							"                            \"type\": \"string\"\r",
+							"                        },\r",
+							"                        \"code\": {\r",
+							"                            \"$id\": \"#/properties/current/properties/condition/properties/code\",\r",
+							"                            \"type\": \"integer\"\r",
+							"                        }\r",
+							"                    },\r",
+							"                    \"additionalProperties\": true\r",
+							"                },\r",
+							"                \"wind_mph\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/wind_mph\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"wind_kph\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/wind_kph\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"wind_degree\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/wind_degree\",\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"wind_dir\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/wind_dir\",\r",
+							"                    \"type\": \"string\"\r",
+							"                },\r",
+							"                \"pressure_mb\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/pressure_mb\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"pressure_in\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/pressure_in\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"precip_mm\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/precip_mm\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"precip_in\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/precip_in\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"humidity\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/humidity\",\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"cloud\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/cloud\",\r",
+							"                    \"type\": \"integer\"\r",
+							"                },\r",
+							"                \"feelslike_c\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/feelslike_c\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"feelslike_f\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/feelslike_f\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"vis_km\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/vis_km\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"vis_miles\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/vis_miles\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"uv\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/uv\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"gust_mph\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/gust_mph\",\r",
+							"                    \"type\": \"number\"\r",
+							"                },\r",
+							"                \"gust_kph\": {\r",
+							"                    \"$id\": \"#/properties/current/properties/gust_kph\",\r",
+							"                    \"type\": \"number\"\r",
+							"                }\r",
+							"            },\r",
+							"            \"additionalProperties\": true\r",
+							"        }\r",
+							"    },\r",
+							"    \"additionalProperties\": true\r",
+							"}\r",
+							"\r",
+							"// set default expected values in case not present in test data set\r",
+							"const name = pm.iterationData.get(\"weatherTime\")\r",
+							"const format = pm.iterationData.get(\"format\")\r",
+							"const location = pm.iterationData.get(\"location\")\r",
+							"const code = pm.iterationData.get(\"status\") || 200;\r",
+							"\r",
+							"// Test case to validate API response code with expected code from test data set \r",
+							"pm.test(\"Validating Status Code\", () => {\r",
+							"    pm.expect(pm.response.code).to.eql(code);\r",
+							"});\r",
+							"\r",
+							"// Test case to validate API returns atleast some error body in case of bad request or error response\r",
+							"if (pm.response.code >= 400) {\r",
+							"    pm.test(\"Validating Error Object is returned\", () => {\r",
+							"        pm.expect(pm.response.text()).to.include(\"error\")\r",
+							"    });\r",
+							"}\r",
+							"else if (code == 200) {\r",
+							"    if (format == \"json\") {\r",
+							"        pm.test('Validating Schema is valid', () => { // validate response schema when limit is passed\r",
+							"            pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;\r",
+							"        })\r",
+							"        pm.test(\"Validating Content-Type for json\", function () {// validate response Content-Type for json\r",
+							"            pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\")\r",
+							"        });\r",
+							"\r",
+							"    } else {\r",
+							"        pm.test(\"Validating Content-Type for xml\", function () {// validate response Content-Type for xml\r",
+							"            pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"text/xml\")\r",
+							"        });\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "key",
+						"value": "08d06f5329714e15a1b235947211610",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "q",
+						"value": "Paris",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://api.weatherapi.com/v1/{{weatherTime}}.{{format}}?q={{location}}",
+					"protocol": "http",
+					"host": [
+						"api",
+						"weatherapi",
+						"com"
+					],
+					"path": [
+						"v1",
+						"{{weatherTime}}.{{format}}"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{location}}"
+						},
+						{
+							"key": "key",
+							"value": "08d06f5329714e15a1b235947211610",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "in",
+				"value": "query",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "08d06f5329714e15a1b235947211610",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "format",
+			"value": ""
+		},
+		{
+			"key": "location",
+			"value": ""
+		}
+	]
+}

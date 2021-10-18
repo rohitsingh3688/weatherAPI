@@ -1,0 +1,16 @@
+{
+  "name": "weather-api-reports-reports",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "report": "npx newman run collections/Weather.postman_collection.json -d dataset/weatherDataSet.json --suppress-exit-code 1 -r --reporter-htmlextra-export report/weatherAPI.html htmlextra --reporter-htmlextra-browserTitle WEATHER_API_Report --reporter-htmlextra-title WEATHER_API_Report_Dashboard --reporter-htmlextra-titleSize 5"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "newman": "^5.2.4",
+    "newman-reporter-htmlextra": "^1.21.0"
+  }
+}
